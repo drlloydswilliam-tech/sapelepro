@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Details | PELEPRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #ff6b6b;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --dark: #2d3436;
+            --success: #27ae60;
+            --rent-primary: #4ecdc4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        .glass-effect {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        nav {
+            padding: 20px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo { font-size: 24px; font-weight: 800; text-decoration: none; color: var(--dark); }
+        .logo span { color: #FFA500; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 5% 50px; }
+
+        /* --- TOP HEADER GRID --- */
+        .property-header-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .main-info-card { padding: 30px; display: flex; flex-direction: column; justify-content: center; }
+        
+        .main-info-card h1 { font-size: 28px; margin-bottom: 8px; line-height: 1.2; }
+        
+        .sub-details { display: flex; gap: 15px; align-items: center; color: #636e72; font-size: 14px; }
+        
+        .price-display { 
+            font-size: 32px; font-weight: 800; color: var(--primary); 
+            margin-top: 10px; display: block;
+        }
+
+        /* --- VERIFIED TOGGLE BOX --- */
+        .verification-box {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 2px solid rgba(39, 174, 96, 0.3);
+        }
+
+        .verify-icon {
+            width: 50px; height: 50px; background: var(--success);
+            color: white; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; margin-bottom: 12px;
+            font-size: 24px; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        /* --- TOGGLE SWITCH --- */
+        .toggle-container {
+            display: flex; align-items: center; gap: 10px; margin-top: 10px;
+            background: rgba(255,255,255,0.5); padding: 8px 15px; border-radius: 30px;
+        }
+
+        .switch {
+            position: relative; display: inline-block; width: 44px; height: 22px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #bdc3c7; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* --- GALLERY GRID --- */
+        .gallery-grid {
+            display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px;
+        }
+
+        .main-img { height: 450px; border-radius: 24px; overflow: hidden; }
+        .main-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .side-gallery { display: grid; grid-template-rows: repeat(3, 1fr); gap: 15px; }
+        .thumb { border-radius: 18px; overflow: hidden; cursor: pointer; height: 140px; border: 3px solid transparent; transition: 0.3s; }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .thumb.active { border-color: var(--primary); }
+
+        /* --- BOTTOM CONTENT --- */
+        .bottom-grid { display: grid; grid-template-columns: 1fr 350px; gap: 30px; }
+
+        .desc-text { padding: 30px; line-height: 1.8; color: #444; }
+
+        .contact-card { padding: 30px; text-align: center; }
+        .locked { opacity: 0.4; filter: grayscale(1); pointer-events: none; transition: 0.5s; }
+
+        .btn {
+            width: 100%; padding: 15px; border-radius: 14px; border: none;
+            font-weight: 700; cursor: pointer; margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: 0.3s;
+        }
+        .btn-wa { background: #25d366; color: white; }
+        .btn-call { background: var(--dark); color: white; }
+
+        .disclaimer {
+            grid-column: 1 / -1; margin-top: 20px; padding: 20px;
+            background: rgba(255, 165, 0, 0.1); border-left: 5px solid #FFA500;
+            font-size: 13px; border-radius: 10px;
+        }
+
+        @media (max-width: 850px) {
+            nav { flex-wrap: wrap; gap: 16px; padding: 18px 5%; }
+            .property-header-grid, .gallery-grid, .bottom-grid { grid-template-columns: 1fr; }
+            .side-gallery { grid-template-columns: repeat(3, 1fr); grid-template-rows: none; }
+            .main-img { height: 300px; }
+            .bottom-grid { gap: 20px; }
+            .contact-card { padding: 22px; }
+        }
+
+        @media (max-width: 520px) {
+            .side-gallery { grid-template-columns: 1fr; }
+            .property-header-grid, .gallery-grid, .bottom-grid { gap: 16px; }
+            .container { padding: 0 4% 40px; }
+            nav { padding: 16px 4%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">PELE<span>PRO</span></a>
+        <button onclick="history.back()" style="background: none; border: none; cursor: pointer; font-weight: 600;">← Back</button>
+    </nav>
+
+    <div class="container">
+        <div class="property-header-grid">
+            <div class="glass-effect main-info-card">
+                <h1 id="propTitle">Loading Property...</h1>
+                <div class="sub-details">
+                    <span id="propLocation">---</span>
+                    <span>•</span>
+                    <span id="propType">---</span>
+                </div>
+                <span class="price-display" id="propPrice">₦0.00</span>
+            </div>
+
+            <div class="glass-effect verification-box">
+                <div class="verify-icon">✓</div>
+                <h3 style="font-size: 16px;">Owner Verified</h3>
+                <p style="font-size: 11px; color: #666; margin-bottom: 10px;">Security check passed</p>
+                
+                <div class="toggle-container">
+                    <span style="font-size: 12px; font-weight: 600;">Contact Agent</span>
+                    <label class="switch">
+                        <input type="checkbox" id="contactToggle" onchange="handleUnlock()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="gallery-grid">
+            <div class="main-img glass-effect">
+                <img id="mainImg" src="" alt="Property">
+            </div>
+            <div class="side-gallery" id="sideGallery">
+                </div>
+        </div>
+
+        <div class="bottom-grid">
+            <div class="glass-effect desc-text">
+                <h3 style="margin-bottom: 15px;">Property Description</h3>
+                <p id="propDesc"></p>
+                
+                <div class="disclaimer">
+                    <strong>⚠️ DISCLAIMER:</strong> PELEPRO is a listing directory. We do not own these properties. Ensure you conduct a physical inspection and legal search before any financial commitment. Do not pay for "Form" or "Viewing Fee" to untrusted sources.
+                </div>
+            </div>
+
+            <aside id="contactSection" class="glass-effect contact-card locked">
+                <h3 style="margin-bottom: 20px;">Interested?</h3>
+                <button class="btn btn-wa" onclick="contactAction('wa')">
+                    <span>💬</span> WhatsApp Agent
+                </button>
+                <button class="btn btn-call" onclick="contactAction('call')">
+                    <span>📞</span> Call Direct
+                </button>
+                <p style="font-size: 11px; color: #888; margin-top: 15px;">Usually responds within 10 mins</p>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        // Load Data
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const db = JSON.parse(localStorage.getItem('property_db')) || [];
+        const item = db.find(p => p.id == id);
+
+        if (item) {
+            document.getElementById('propTitle').innerText = item.title;
+            document.getElementById('propPrice').innerText = `₦${item.price}`;
+            document.getElementById('propLocation').innerText = `${item.location}, ${item.state}`;
+            document.getElementById('propType').innerText = item.type === 'sale' ? 'For Sale' : 'For Rent';
+            document.getElementById('propDesc').innerText = item.description || "No description available.";
+            
+            // Set color theme based on type
+            const root = document.documentElement;
+            if (item.type === 'rent') {
+                root.style.setProperty('--primary', 'var(--rent-primary)');
+            } else {
+                root.style.setProperty('--primary', '#ff6b6b');
+            }
+            
+            // Update contact section based on type and verification state
+            const contactSection = document.getElementById('contactSection');
+            const contactTitle = contactSection.querySelector('h3');
+            const verifyLabel = document.querySelector('.verification-box h3');
+            const verifyNote = document.querySelector('.verification-box p');
+            const waButton = contactSection.querySelector('.btn-wa');
+            const callButton = contactSection.querySelector('.btn-call');
+            const verifyIcon = document.querySelector('.verify-icon');
+
+            if (item.type === 'rent') {
+                contactTitle.innerText = 'Interested in Renting?';
+                waButton.innerHTML = '<span>💬</span> WhatsApp Agent';
+                callButton.innerHTML = '<span>📞</span> Call Direct';
+            } else {
+                contactTitle.innerText = 'Interested in Buying?';
+                waButton.innerHTML = '<span>💬</span> WhatsApp Agent';
+                callButton.innerHTML = '<span>📞</span> Call Direct';
+            }
+
+            if (item.verified) {
+                verifyIcon.innerText = '✓';
+                verifyIcon.style.background = 'var(--success)';
+                verifyLabel.innerText = 'Owner Verified';
+                verifyNote.innerText = 'Security check passed';
+            } else {
+                verifyIcon.innerText = '!';
+                verifyIcon.style.background = '#ff7675';
+                verifyLabel.innerText = 'Not Verified';
+                verifyNote.innerText = 'This listing has not been verified yet.';
+            }
+            
+            const mainImg = document.getElementById('mainImg');
+            const images = item.images && item.images.length > 0 ? item.images : [item.image || 'https://via.placeholder.com/450x300?text=No+Image'];
+            mainImg.src = images[0];
+
+            const gallery = document.getElementById('sideGallery');
+            images.slice(0, 3).forEach((img, idx) => {
+                const div = document.createElement('div');
+                div.className = `thumb ${idx === 0 ? 'active' : ''}`;
+                div.innerHTML = `<img src="${img}">`;
+                div.onclick = () => {
+                    mainImg.src = img;
+                    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                    div.classList.add('active');
+                };
+                gallery.appendChild(div);
+            });
+        }
+
+        function handleUnlock() {
+            const isChecked = document.getElementById('contactToggle').checked;
+            const contactSection = document.getElementById('contactSection');
+            if(isChecked) {
+                contactSection.classList.remove('locked');
+            } else {
+                contactSection.classList.add('locked');
+            }
+        }
+
+        function contactAction(type) {
+            const phone = "2348000000000"; // Replace with real number
+            const msg = encodeURIComponent(`Hi, I saw "${item.title}" on PELEPRO. Is it available?`);
+            if(type === 'wa') window.open(`https://wa.me/${phone}?text=${msg}`);
+            else window.open(`tel:${phone}`);
+        }
+    </script>
+</body>
+</html>

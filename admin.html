@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PELEPRO | Master Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #ff6b6b; 
+            --dark: #2d3436; 
+            --bg: #f4f7f6; 
+            --success: #2ecc71;
+            --border-color: #dfe6e9;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--dark); padding: 40px 5%; }
+
+        .dashboard-header { max-width: 1100px; margin: 0 auto 30px; display: flex; justify-content: space-between; align-items: center; }
+        .back-link { text-decoration: none; color: var(--primary); font-weight: 600; font-size: 14px; }
+
+        /* Navigation Tabs */
+        .admin-nav-tabs {
+            display: flex;
+            gap: 10px;
+            max-width: 1100px;
+            margin: 0 auto 20px auto;
+        }
+        .tab-btn {
+            background: #e4ebe9;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #7f8c8d;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            background: var(--dark);
+            color: white;
+        }
+
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 450px 1fr;
+            gap: 30px;
+        }
+
+        /* Toggle utility for layouts */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .full-width-container { grid-column: 1 / -1; }
+
+        .admin-card {
+            background: white; padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); height: fit-content;
+            position: sticky; top: 40px;
+        }
+
+        h2 { margin-bottom: 20px; font-size: 18px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: #b2bec3; }
+        
+        input[type="text"], input[type="password"], select {
+            width: 100%; padding: 12px; border-radius: 10px;
+            border: 1px solid var(--border-color); outline: none; font-size: 14px;
+        }
+
+        input[type="file"] {
+            font-size: 12px; background: #f9f9f9; padding: 10px;
+            border-radius: 10px; width: 100%; border: 1px dashed #ccc;
+        }
+
+        .checkbox-group { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .checkbox-group input { width: 18px; height: 18px; cursor: pointer; }
+
+        .btn-post {
+            width: 100%; padding: 16px; border-radius: 12px; border: none;
+            background: var(--dark); color: white; font-weight: 700;
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-post:hover { background: var(--primary); transform: translateY(-2px); }
+
+        .manage-card {
+            background: white; padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 11px; color: #a4b0be; padding-bottom: 15px; border-bottom: 1px solid #f1f2f6; text-transform: uppercase; }
+        td { padding: 15px 0; border-bottom: 1px solid #f1f2f6; font-size: 13px; }
+        
+        .btn-action { border: none; background: none; font-weight: 600; cursor: pointer; margin-right: 10px; font-size: 12px; }
+        .btn-edit { color: #0984e3; }
+        .btn-delete { color: #ff7675; }
+        .btn-action-verify { color: #2ecc71; }
+
+        .badge-featured { background: #ffeaa7; color: #d63031; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+
+        .enquiries-list { display: grid; gap: 20px; }
+        .enquiry-card {
+            background: #fff; border: 1px solid var(--border-color); border-radius: 18px;
+            padding: 20px; box-shadow: 0 8px 24px rgba(45,52,54,0.05);
+        }
+        .enquiry-header {
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
+            margin-bottom: 14px;
+        }
+        .enquiry-header strong { font-size: 17px; }
+        .enquiry-header small { display: block; color: #636e72; margin-top: 2px; }
+        .enquiry-meta {
+            display: flex; flex-wrap: wrap; gap: 12px 18px; font-size: 12px; color: #636e72;
+            margin-bottom: 12px;
+        }
+        .enquiry-message { font-size: 14px; line-height: 1.7; color: var(--dark); margin-bottom: 18px; }
+        .media-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px; margin-top: 12px;
+        }
+        .media-grid img, .media-grid video {
+            width: 100%; height: 180px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border-color); background: #f5f5f5;
+        }
+        .empty-state {
+            background: white; border: 1px dashed #bdc3c7; border-radius: 12px; padding: 26px; text-align: center; color: #636e72;
+        }
+
+        #uploadStatus, #passwordStatus { font-size: 12px; margin-top: 10px; font-weight: 600; }
+        .status-success { color: var(--success); }
+        .status-error { color: var(--primary); }
+
+        @media (max-width: 900px) {
+            body { padding: 24px 4%; }
+            .dashboard-header { flex-direction: column; align-items: stretch; gap: 18px; }
+            .admin-nav-tabs { flex-direction: column; gap: 8px; }
+            .dashboard-container { grid-template-columns: 1fr; gap: 24px; }
+            .admin-card, .manage-card { padding: 24px; }
+            .admin-card { position: static; top: auto; }
+            .btn-post { padding: 14px; }
+            .manage-card { overflow-x: auto; }
+            .manage-card table { min-width: 600px; }
+        }
+
+        @media (max-width: 520px) {
+            body { padding: 18px 3%; }
+            .admin-card, .manage-card { padding: 18px; }
+            .dashboard-header { gap: 14px; }
+            th, td { font-size: 11px; padding: 10px 0; }
+            .btn-post { padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loginContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; width: 90%;">
+            <h2 style="margin-bottom: 20px; color: #2d3436;">Admin Login</h2>
+            <input type="password" id="adminPassword" placeholder="Enter Admin Password" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #dfe6e9; margin-bottom: 20px; font-size: 14px;" onkeypress="if(event.key === 'Enter') loginAdmin()">
+            <button onclick="loginAdmin()" style="width: 100%; padding: 14px; background: #ff6b6b; color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">Login</button>
+            <p id="loginError" style="color: red; margin-top: 10px; display: none;">Incorrect password. Try again.</p>
+        </div>
+    </div>
+
+    <div id="adminContent" style="display: none;">
+        
+        <div class="dashboard-header">
+            <a href="index.html" class="back-link">← Return to Site</a>
+            <h1 style="font-size: 24px;">Admin Dashboard</h1>
+            <button onclick="logoutAdmin()" style="background: #b2bec3; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Logout</button>
+        </div>
+
+        <div class="admin-nav-tabs">
+            <button id="tabBtnListings" class="tab-btn active" onclick="switchTab('listings')">Manage Listings</button>
+            <button id="tabBtnEnquiries" class="tab-btn" onclick="switchTab('enquiries')">Enquiries</button>
+            <button id="tabBtnSecurity" class="tab-btn" onclick="switchTab('security')">Security Settings</button>
+        </div>
+
+        <div id="listingsTabContent" class="tab-content active">
+            <div class="dashboard-container">
+                <div class="admin-card">
+                    <h2 id="formTitle">Add New Property</h2>
+                    
+                    <input type="hidden" id="editId">
+
+                    <div class="form-group">
+                        <label>Property Name</label>
+                        <input type="text" id="pTitle" placeholder="e.g. Ocean View Apartment">
+                    </div>
+
+                    <div class="form-group">
+                        <label>State</label>
+                        <select id="pState" onchange="updateLGA()">
+                            <option value="">Select State</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>LGA / Neighborhood</label>
+                        <select id="pLGA">
+                            <option value="">Select LGA</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="text" id="pPrice" placeholder="e.g. ₦150,000,000">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="pType">
+                            <option value="sale">For Sale</option>
+                            <option value="rent">For Rent</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="pDescription" placeholder="Describe the property, features, amenities, etc." style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #dfe6e9; font-size: 14px; font-family: 'Poppins', sans-serif; resize: vertical; min-height: 100px;"></textarea>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="pFeatured">
+                        <label style="margin-bottom:0">Featured (Show on Home Slider)</label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="pVerified">
+                        <label style="margin-bottom:0">Verified Property</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Images</label>
+                        <input type="file" id="pImages" accept="image/*" multiple>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Videos (Optional)</label>
+                        <input type="file" id="pVideos" accept="video/*" multiple>
+                    </div>
+
+                    <button class="btn-post" id="publishBtn" onclick="processAndSave()">Publish Listing</button>
+                    <button class="btn-post" id="cancelBtn" onclick="resetForm()" style="display:none; background:#b2bec3; margin-top: 5px;">Cancel Edit</button>
+                    <p id="uploadStatus"></p>
+                </div>
+
+                <div class="manage-card">
+                    <h2>Live Listings</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Location</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Verified</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listingTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="enquiriesTabContent" class="tab-content">
+            <div class="dashboard-container full-width-container" style="display: block; max-width: 1100px; margin: 0 auto;">
+                <div class="manage-card">
+                    <h2 style="font-size: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 25px;">Customer Enquiries</h2>
+                    <div id="enquiriesList" class="enquiries-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="securityTabContent" class="tab-content">
+            <div class="dashboard-container full-width-container" style="display: block; max-width: 600px; margin: 0 auto;">
+                <div class="manage-card">
+                    <h2 style="font-size: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 25px;">Change Account Password</h2>
+                    
+                    <form id="changePasswordForm" onsubmit="handlePasswordChange(event)">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" placeholder="Enter current admin password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" placeholder="Minimum 6 characters" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" placeholder="Re-type new password" required>
+                        </div>
+
+                        <button type="submit" class="btn-post">Update Password</button>
+                        <p id="passwordStatus"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div> <script>
+        // Data Object (Keep this consistent with your search.html)
+        const nigeriaData = {
+            "Abia": ["Aba North", "Aba South", "Arochukwu", "Bende", "Ikwuano", "Isiala Ngwa North", "Isiala Ngwa South", "Isuikwuato", "Obingwa", "Ohafia", "Osisioma", "Ugwunagbo", "Ukwa East", "Ukwa West", "Umuahia North", "Umuahia South", "Umu-Nneochi"],
+            "Adamawa": ["Demsa", "Fufure", "Ganye", "Gayuk", "Gombi", "Grie", "Hong", "Jada", "Lamurde", "Madagali", "Maiha", "Mayo Belwa", "Michika", "Mubi North", "Mubi South", "Numan", "Shelleng", "Song", "Toungo", "Yola North", "Yola South"],
+            "Akwa Ibom": ["Abak", "Eastern Obolo", "Eket", "Esit Eket", "Essien Udim", "Etim Ekpo", "Etinan", "Ibeno", "Ibesikpo Asutan", "Ibiono-Ibom", "Ika", "Ikono", "Ikot Abasi", "Ikot Ekpene", "Ini", "Itu", "Mbo", "Mkpat-Enin", "Nsit-Atai", "Nsit-Ibom", "Nsit-Ubium", "Obot Akara", "Okobo", "Onna", "Oron", "Oruk Anam", "Udung-Uko", "Ukanafun", "Uruan", "Urue-Offong/Oruko", "Uyo"],
+            "Anambra": ["Aguata", "Anambra East", "Anambra West", "Anaocha", "Awka North", "Awka South", "Ayamelum", "Dunukofia", "Ekwusigo", "Idemili North", "Idemili South", "Ihiala", "Njikoka", "Nnewi North", "Nnewi South", "Ogbaru", "Onitsha North", "Onitsha South", "Orumba North", "Orumba South", "Oyi"],
+            "Bauchi": ["Alkaleri", "Bauchi", "Bogoro", "Damban", "Darazo", "Dass", "Gamawa", "Ganjuwa", "Giade", "Itas/Gadau", "Jama'are", "Katagum", "Kirfi", "Misau", "Ningi", "Shira", "Tafawa Balewa", "Toro", "Warji", "Zaki"],
+            "Bayelsa": ["Brass", "Ekeremor", "Kolokuma/Opokuma", "Nembe", "Ogbia", "Sagbama", "Southern Ijaw", "Yenagoa"],
+            "Benue": ["Agatu", "Apa", "Ado", "Buruku", "Gboko", "Guma", "Gwer East", "Gwer West", "Katsina-Ala", "Konshisha", "Kwande", "Logo", "Makurdi", "Obi", "Ogbadibo", "Ohimini", "Oju", "Okpokwu", "Oturkpo", "Tarka", "Ukum", "Ushongo", "Vandeikya"],
+            "Borno": ["Abadam", "Askira/Uba", "Bama", "Bayo", "Biu", "Chibok", "Damboa", "Dikwa", "Gubio", "Guzamala", "Gwoza", "Hawul", "Jere", "Kaga", "Kala/Balge", "Konduga", "Kukawa", "Kwaya Kusar", "Mafa", "Magumeri", "Maiduguri", "Marte", "Mobbar", "Monguno", "Ngala", "Nganzai", "Shani"],
+            "Cross River": ["Abi", "Akamkpa", "Akpabuyo", "Bakassi", "Bekwarra", "Biase", "Boki", "Calabar Municipal", "Calabar South", "Etung", "Ikom", "Obanliku", "Obubra", "Obudu", "Odukpani", "Ogoja", "Yakuur", "Yala"],
+            "Delta": ["Aniocha North", "Aniocha South", "Bomadi", "Burutu", "Ethiope East", "Ethiope West", "Ika North East", "Ika South", "Isoko North", "Isoko South", "Ndokwa East", "Ndokwa West", "Okpe", "Oshimili North", "Oshimili South", "Patani", "Sapele", "Udu", "Ughelli North", "Ughelli South", "Ukwuani", "Uvwie", "Warri North", "Warri South", "Warri South West"],
+            "Ebonyi": ["Abakaliki", "Afikpo North", "Afikpo South", "Ebonyi", "Ezza North", "Ezza South", "Ikwo", "Ishielu", "Ivo", "Izzi", "Ohaozara", "Ohaukwu", "Onicha"],
+            "Edo": ["Akoko-Edo", "Egor", "Esan Central", "Esan North-East", "Esan South-East", "Esan West", "Etsako Central", "Etsako East", "Etsako West", "Igueben", "Ikpoba Okha", "Orhionmwon", "Oredo", "Ovia North-East", "Ovia South-West", "Owan East", "Owan West", "Uhunmwonde"],
+            "Ekiti": ["Ado Ekiti", "Efon", "Ekiti East", "Ekiti South-West", "Ekiti West", "Emure", "Gbonyin", "Ido Osi", "Ijero", "Ikere", "Ikole", "Ilejemeje", "Irepodun/Ifelodun", "Ise/Orun", "Moba", "Oye"],
+            "Enugu": ["Aninri", "Awgu", "Enugu East", "Enugu North", "Enugu South", "Ezeagu", "Igbo Etiti", "Igbo Eze North", "Igbo Eze South", "Isi Uzo", "Nkanu East", "Nkanu West", "Nsukka", "Oji River", "Udenu", "Udi", "Uzo Uwani"],
+            "FCT": ["Abaji", "Bwari", "Gwagwalada", "Kuje", "Kwali", "Municipal Area Council"],
+            "Gombe": ["Akko", "Balanga", "Billiri", "Dukku", "Funakaye", "Gombe", "Kaltungo", "Kwami", "Nafada", "Shongom", "Yamaltu/Deba"],
+            "Imo": ["Ahiazu Mbaise", "Ehime Mbano", "Ezinihitte", "Ideato North", "Ideato South", "Ihitte/Uboma", "Ikeduru", "Isiala Mbano", "Isu", "Mbaitoli", "Ngor Okpala", "Njaba", "Nkwerre", "Nwangele", "Obowo", "Oguta", "Ohaji/Egbema", "Okigwe", "Orlu", "Orsu", "Oru East", "Oru West", "Owerri Municipal", "Owerri North", "Owerri West", "Unuimo"],
+            "Jigawa": ["Auyo", "Babura", "Biriniwa", "Birnin Kudu", "Buji", "Dutse", "Gagarawa", "Garki", "Gumel", "Guri", "Gwaram", "Gwiwa", "Hadejia", "Jahun", "Kafin Hausa", "Kazaure", "Kiri Kasama", "Kiyawa", "Kaugama", "Maigatari", "Malam Madori", "Miga", "Ringim", "Roni", "Sule Tankarkar", "Taura", "Yankwashi"],
+            "Kaduna": ["Birnin Gwari", "Chikun", "Giwa", "Igabii", "Ikara", "Jaba", "Jema'a", "Kachia", "Kaduna North", "Kaduna South", "Kagarko", "Kajuru", "Kaura", "Kauru", "Kubau", "Kudan", "Lere", "Makarfi", "Sabon Gari", "Sanga", "Soba", "Zangon Kataf", "Zaria"],
+            "Kano": ["Ajingi", "Albasu", "Bagwai", "Bebeji", "Bichi", "Bunkure", "Dala", "Dambatta", "Dawakin Kudu", "Dawakin Tofa", "Doguwa", "Fagge", "Gabasawa", "Garko", "Garun Mallam", "Gaya", "Gezawa", "Gwale", "Gwarzo", "Kabo", "Kano Municipal", "Karaye", "Kibiya", "Kiru", "Kumbotso", "Kunchi", "Kura", "Madobi", "Makoda", "Minjibir", "Nasarawa", "Rano", "Rimin Gado", "Rogo", "Shanono", "Sumaila", "Takai", "Tarauni", "Tofa", "Tsanyawa", "Tudun Wada", "Ungogo", "Warawa", "Wudil"],
+            "Katsina": ["Bakori", "Batagarawa", "Batsari", "Baure", "Bindawa", "Charanchi", "Dandume", "Danja", "Dan Musa", "Daura", "Dutsi", "Dutsin Ma", "Faskari", "Funtua", "Ingawa", "Jibia", "Kafur", "Kaita", "Kankara", "Kankia", "Katsina", "Kurfi", "Kusada", "Mai'Adua", "Malumfashi", "Mani", "Mashi", "Musawa", "Rimi", "Sabuwa", "Safana", "Sandamu", "Zango"],
+            "Kebbi": ["Aleiro", "Arewa Dandi", "Argungu", "Augie", "Bagudo", "Birnin Kebbi", "Bunza", "Dandi", "Fakai", "Gwandu", "Jega", "Kalgo", "Koko/Besse", "Maiyama", "Ngaski", "Sakaba", "Shanga", "Suru", "Wasagu/Danko", "Yauri", "Zuru"],
+            "Kogi": ["Adavi", "Ajaokuta", "Ankpa", "Bassa", "Dekina", "Ibaji", "Idah", "Igalamela Odolu", "Ijumu", "Kabba/Bunu", "Kogi", "Lokoja", "Mopa Muro", "Ofu", "Ogori/Magongo", "Okehi", "Okene", "Olamaboro", "Omala", "Yagba East", "Yagba West"],
+            "Kwara": ["Asa", "Baruten", "Edu", "Ekiti", "Ifelodun", "Ilorin East", "Ilorin South", "Ilorin West", "Irepodun", "Isin", "Kaiama", "Moro", "Offa", "Oke Ero", "Oyun", "Pategi"],
+            "Lagos": ["Agege", "Ajeromi-Ifelodun", "Alimosho", "Amuwo-Odofin", "Apapa", "Badagry", "Epe", "Eti Osa", "Ibeju-Lekki", "Ifako-Ijaiye", "Ikeja", "Ikorodu", "Kosofe", "Lagos Island", "Lagos Mainland", "Mushin", "Ojo", "Oshodi-Isolo", "Shomolu", "Surulere"],
+            "Nasarawa": ["Akwanga", "Awe", "Doma", "Karu", "Keana", "Keffi", "Kokona", "Lafia", "Nasarawa", "Nasarawa Egon", "Obi", "Toto", "Wamba"],
+            "Niger": ["Agaie", "Agwara", "Bida", "Borgu", "Bosso", "Chanchaga", "Edati", "Gbako", "Gurara", "Katcha", "Kontagora", "Lapai", "Lavun", "Magama", "Mariga", "Mashegu", "Mokwa", "Moya", "Paikoro", "Rafi", "Rijau", "Shiroro", "Suleja", "Tafa", "Wushishi"],
+            "Ogun": ["Abeokuta North", "Abeokuta South", "Ado-Odo/Ota", "Ewekoro", "Ifo", "Ijebu East", "Ijebu North", "Ijebu North East", "Ijebu Ode", "Ikenne", "Imeko Afon", "Ipokia", "Obafemi Owode", "Odeda", "Odogbolu", "Ogun Waterside", "Remo North", "Shagamu", "Yewa North", "Yewa South"],
+            "Ondo": ["Akoko North-East", "Akoko North-West", "Akoko South-East", "Akoko South-West", "Akure North", "Akure South", "Ese Odo", "Idanre", "Ifedore", "Ilaie", "Ile Oluji/Okeigbo", "Irele", "Odigbo", "Okitipupa", "Ondo East", "Ondo West", "Ose", "Owo"],
+            "Osun": ["Atakunmosa East", "Atakunmosa West", "Aiyedaade", "Aiyedire", "Boluwaduro", "Boripe", "Ede North", "Ede South", "Ife Central", "Ife East", "Ife North", "Ife South", "Egbedore", "Ejigbo", "Ifedayo", "Ifelodun", "Ila", "Ilesa North", "Ilesa South", "Irepodun", "Irewole", "Isokan", "Iwo", "Obokun", "Ola Oluwa", "Olorunda", "Oriade", "Orolu", "Osogbo"],
+            "Oyo": ["Afijio", "Akinyele", "Atiba", "Atisbo", "Egbeda", "Ibadan North", "Ibadan North-East", "Ibadan North-West", "Ibadan South-East", "Ibadan South-West", "Ibarapa Central", "Ibarapa East", "Ibarapa North", "Ido", "Irepo", "Iseyin", "Itesiwaju", "Iwajowa", "Kajola", "Lagelu", "Ogbomosho North", "Ogbomosho South", "Ogo Oluwa", "Olorunsogo", "Oluyole", "Ona Ara", "Orelope", "Ori Ire", "Oyo West", "Saki East", "Saki West", "Surulere"],
+            "Plateau": ["Bokkos", "Barkin Ladi", "Bassa", "Jos East", "Jos North", "Jos South", "Kanam", "Kanke", "Langtang North", "Langtang South", "Mangu", "Mikang", "Pankshin", "Qua'an Pan", "Riyom", "Shendam", "Wase"],
+            "Rivers": ["Abua/Odual", "Ahoada East", "Ahoada West", "Akuku-Toru", "Andoni", "Asari-Toru", "Bonny", "Degema", "Eleme", "Emuoha", "Etche", "Gokana", "Ikwerre", "Khana", "Obio/Akpor", "Ogba/Endoni/Egbema", "Ogu/Bolo", "Okrika", "Omuma", "Opobo/Nkoro", "Oyigbo", "Port-Harcourt", "Tai"],
+            "Sokoto": ["Binji", "Bodinga", "Dange Shuni", "Gada", "Goronyo", "Gudu", "Gwadabawa", "Illela", "Isa", "Kebbe", "Kware", "Rabah", "Sabon Birni", "Shagari", "Silame", "Sokoto North", "Sokoto South", "Tambuwal", "Tangaza", "Tureta", "Wamako", "Wurno", "Yabo"],
+            "Taraba": ["Ardo-Kola", "Bali", "Donga", "Gashaka", "Gassol", "Ibi", "Jalingo", "Karim Lamido", "Kumi", "Lau", "Sardauna", "Takum", "Ussa", "Wukari", "Yorro", "Zing"],
+            "Yobe": ["Bade", "Bursari", "Damaturu", "Fika", "Fune", "Geidam", "Gujba", "Gulani", "Jakusko", "Karasuwa", "Machina", "Nangere", "Nguru", "Potiskum", "Tarmuwa", "Yunusari", "Yusufari"],
+            "Zamfara": ["Anka", "Bakura", "Birnin Magaji/Kiyaw", "Bukkuyum", "Bungudu", "Gummi", "Gusau", "Kaura Namoda", "Maradun", "Maru", "Shinkafi", "Talata Mafara", "Chafe", "Zurmi"]
+        };
+
+        const PILOT_STATE = 'Delta';
+        const PILOT_LGA = 'Sapele';
+
+        function normalizePilotListings() {
+            const db = JSON.parse(localStorage.getItem('property_db') || '[]');
+            const updated = db.map(item => {
+                const state = item.state === 'Delta' ? 'Delta' : PILOT_STATE;
+                const location = (item.location === 'Sapele' || item.lga === 'Sapele') ? 'Sapele' : PILOT_LGA;
+                const isPilotProperty = state === PILOT_STATE && location === PILOT_LGA;
+                return {
+                    ...item,
+                    state,
+                    location,
+                    lga: location,
+                    featured: isPilotProperty ? Boolean(item.featured) : false,
+                    verified: isPilotProperty ? Boolean(item.verified) : false
+                };
+            });
+            localStorage.setItem('property_db', JSON.stringify(updated));
+        }
+
+        // Populate States on Load
+        const stateSelect = document.getElementById('pState');
+        const lgaSelect = document.getElementById('pLGA');
+
+        stateSelect.innerHTML = '<option value="Delta">Delta</option>';
+        stateSelect.value = PILOT_STATE;
+        lgaSelect.innerHTML = '<option value="Sapele">Sapele</option>';
+        lgaSelect.value = PILOT_LGA;
+
+        function updateLGA(selectedLga = PILOT_LGA) {
+            lgaSelect.innerHTML = '<option value="Sapele">Sapele</option>';
+            lgaSelect.value = PILOT_LGA;
+            if (selectedLga && selectedLga !== PILOT_LGA) {
+                lgaSelect.value = PILOT_LGA;
+            }
+        }
+
+        /* ── NAVIGATION TAB SWITCHER ── */
+        function switchTab(tabName) {
+            const listingsBtn = document.getElementById('tabBtnListings');
+            const enquiriesBtn = document.getElementById('tabBtnEnquiries');
+            const securityBtn = document.getElementById('tabBtnSecurity');
+            const listingsContent = document.getElementById('listingsTabContent');
+            const enquiriesContent = document.getElementById('enquiriesTabContent');
+            const securityContent = document.getElementById('securityTabContent');
+
+            listingsBtn.classList.remove('active');
+            enquiriesBtn.classList.remove('active');
+            securityBtn.classList.remove('active');
+            listingsContent.classList.remove('active');
+            enquiriesContent.classList.remove('active');
+            securityContent.classList.remove('active');
+
+            if (tabName === 'listings') {
+                listingsBtn.classList.add('active');
+                listingsContent.classList.add('active');
+            } else if (tabName === 'enquiries') {
+                enquiriesBtn.classList.add('active');
+                enquiriesContent.classList.add('active');
+                loadEnquiries();
+            } else if (tabName === 'security') {
+                securityBtn.classList.add('active');
+                securityContent.classList.add('active');
+                const statusEl = document.getElementById('passwordStatus');
+                statusEl.className = '';
+                statusEl.textContent = '';
+            }
+
+            if (tabName !== 'security') {
+                const statusEl = document.getElementById('passwordStatus');
+                statusEl.className = '';
+                statusEl.textContent = '';
+            }
+        }
+
+        /* ── AUTHENTICATION ENGINE ── */
+        // Check if customizable password exists in Storage, otherwise set default
+        if (!localStorage.getItem('adminPassword')) {
+            localStorage.setItem('adminPassword', 'admin123');
+        }
+
+        normalizePilotListings();
+
+        if (localStorage.getItem('isAdmin') === 'true') {
+            document.getElementById('adminContent').style.display = 'block';
+            loadListings();
+            loadEnquiries();
+        } else {
+            document.getElementById('loginContainer').style.display = 'flex';
+        }
+
+        function loginAdmin() {
+            const enteredPassword = document.getElementById('adminPassword').value;
+            const currentSecret = localStorage.getItem('adminPassword') || 'admin123';
+
+            if (enteredPassword === currentSecret) {
+                localStorage.setItem('isAdmin', 'true');
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                loadListings();
+                loadEnquiries();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem('isAdmin');
+            window.location.href = 'index.html';
+        }
+
+        /* ── CHANGE PASSWORD HANDLER ── */
+        function handlePasswordChange(event) {
+            event.preventDefault();
+
+            const currentInput = document.getElementById('currentPassword').value;
+            const newInput = document.getElementById('newPassword').value;
+            const confirmInput = document.getElementById('confirmPassword').value;
+            const statusEl = document.getElementById('passwordStatus');
+
+            // Reset styles
+            statusEl.className = '';
+            statusEl.textContent = '';
+
+            const activePassword = localStorage.getItem('adminPassword') || 'admin123';
+
+            // Verification Sequence
+            if (currentInput !== activePassword) {
+                statusEl.textContent = 'Incorrect current password.';
+                statusEl.className = 'status-error';
+                return;
+            }
+
+            if (newInput.length < 6) {
+                statusEl.textContent = 'New password must be at least 6 characters long.';
+                statusEl.className = 'status-error';
+                return;
+            }
+
+            if (newInput !== confirmInput) {
+                statusEl.textContent = 'Confirm password does not match new password.';
+                statusEl.className = 'status-error';
+                return;
+            }
+
+            if (newInput === currentInput) {
+                statusEl.textContent = 'New password cannot match your current active password.';
+                statusEl.className = 'status-error';
+                return;
+            }
+
+            // Save and reset interface
+            localStorage.setItem('adminPassword', newInput);
+            statusEl.textContent = 'Security credentials updated successfully!';
+            statusEl.className = 'status-success';
+            document.getElementById('changePasswordForm').reset();
+        }
+
+        /* ── MEDIA READER UTILITIES ── */
+        const fileToDataUrl = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+        /* ── PROPERTY DB WORKFLOWS ── */
+        async function processAndSave() {
+            const editId = document.getElementById('editId').value;
+            const title = document.getElementById('pTitle').value;
+            const state = PILOT_STATE;
+            const lga = PILOT_LGA;
+            const price = document.getElementById('pPrice').value;
+            const type = document.getElementById('pType').value;
+            const description = document.getElementById('pDescription').value;
+            const isFeatured = document.getElementById('pFeatured').checked;
+            const imageFiles = document.getElementById('pImages').files;
+            const videoFiles = document.getElementById('pVideos').files;
+            const status = document.getElementById('uploadStatus');
+
+            if(!title) return alert("Title is required.");
+
+            status.innerText = "Processing Listing...";
+            document.getElementById('publishBtn').disabled = true;
+
+            try {
+                let db = JSON.parse(localStorage.getItem('property_db')) || [];
+                let imageUrls = [];
+                let videoUrls = [];
+
+                if (editId) {
+                    const oldItem = db.find(p => p.id == editId);
+                    imageUrls = imageFiles.length > 0 ? await Promise.all(Array.from(imageFiles).map(file => fileToDataUrl(file))) : oldItem.images;
+                    videoUrls = videoFiles.length > 0 ? await Promise.all(Array.from(videoFiles).map(file => fileToDataUrl(file))) : oldItem.videos;
+                } else {
+                    if (imageFiles.length === 0) throw new Error("At least one image is required.");
+                    imageUrls = await Promise.all(Array.from(imageFiles).map(file => fileToDataUrl(file)));
+                    videoUrls = await Promise.all(Array.from(videoFiles).map(file => fileToDataUrl(file)));
+                }
+
+                const isVerified = document.getElementById('pVerified').checked;
+                const propertyData = {
+                    id: editId ? parseInt(editId) : Date.now(),
+                    title,
+                    state,
+                    location: lga,
+                    price,
+                    type,
+                    description,
+                    featured: isFeatured && state === PILOT_STATE && lga === PILOT_LGA,
+                    verified: isVerified && state === PILOT_STATE && lga === PILOT_LGA,
+                    images: imageUrls,
+                    videos: videoUrls,
+                    image: imageUrls[0]
+                };
+
+                if (editId) {
+                    const index = db.findIndex(p => p.id == editId);
+                    db[index] = propertyData;
+                } else {
+                    db.unshift(propertyData);
+                }
+
+                localStorage.setItem('property_db', JSON.stringify(db));
+                resetForm();
+                loadListings();
+                alert("Success!");
+
+            } catch (err) {
+                alert(err.message);
+            } finally {
+                document.getElementById('publishBtn').disabled = false;
+                status.innerText = "";
+            }
+        }
+
+        function loadListings() {
+            const table = document.getElementById('listingTable');
+            const db = JSON.parse(localStorage.getItem('property_db')) || [];
+            table.innerHTML = db.map(p => `
+                <tr>
+                    <td><strong>${p.title}</strong> ${p.featured ? '<span class="badge-featured">F</span>' : ''}</td>
+                    <td>${p.location}, ${p.state}</td>
+                    <td>${p.type.toUpperCase()}</td>
+                    <td>${p.price}</td>
+                    <td>${p.verified ? 'Yes' : 'No'}</td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="editItem(${p.id})">Edit</button>
+                        <button class="btn-action btn-action-verify" onclick="toggleVerified(${p.id})">${p.verified ? 'Unverify' : 'Verify'}</button>
+                        <button class="btn-action btn-delete" onclick="deleteItem(${p.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function escapeHtml(value = '') {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function loadEnquiries() {
+            const list = document.getElementById('enquiriesList');
+            const requests = JSON.parse(localStorage.getItem('contact_requests')) || [];
+
+            if (!requests.length) {
+                list.innerHTML = '<div class="empty-state">No customer enquiries have been submitted yet.</div>';
+                return;
+            }
+
+            list.innerHTML = requests.slice().reverse().map(request => {
+                const images = (request.images || []).map(img => `
+                    <img src="${img.data}" alt="${escapeHtml(img.name || 'Uploaded image')}" loading="lazy">
+                `).join('');
+
+                const videos = (request.videos || []).map(video => `
+                    <video controls src="${video.data}" preload="metadata"></video>
+                `).join('');
+
+                const requestType = (request.requestType || 'general_inquiry')
+                    .replace(/_/g, ' ')
+                    .replace(/\b\w/g, char => char.toUpperCase());
+
+                return `
+                    <div class="enquiry-card">
+                        <div class="enquiry-header">
+                            <div>
+                                <strong>${escapeHtml(request.name || 'Unknown')}</strong>
+                                <small>${escapeHtml(request.email || 'No email')}</small>
+                            </div>
+                            <button class="btn-action btn-delete" onclick="deleteEnquiry(${request.id})">Delete</button>
+                        </div>
+
+                        <div class="enquiry-meta">
+                            <span><strong>Type:</strong> ${escapeHtml(requestType)}</span>
+                            <span><strong>Submitted:</strong> ${new Date(request.createdAt || Date.now()).toLocaleString()}</span>
+                        </div>
+
+                        <p class="enquiry-message">${escapeHtml(request.message || '')}</p>
+
+                        ${images ? `<div class="media-grid">${images}</div>` : ''}
+                        ${videos ? `<div class="media-grid">${videos}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteEnquiry(id) {
+            if (!confirm('Delete this enquiry?')) return;
+
+            const requests = JSON.parse(localStorage.getItem('contact_requests')) || [];
+            const filtered = requests.filter(request => request.id !== id);
+            localStorage.setItem('contact_requests', JSON.stringify(filtered));
+            loadEnquiries();
+        }
+
+        function editItem(id) {
+            const db = JSON.parse(localStorage.getItem('property_db')) || [];
+            const p = db.find(item => item.id == id);
+            if(!p) return;
+
+            document.getElementById('editId').value = p.id;
+            document.getElementById('pTitle').value = p.title;
+            document.getElementById('pState').value = PILOT_STATE;
+            updateLGA(p.location || PILOT_LGA);
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pType').value = p.type;
+            document.getElementById('pDescription').value = p.description || "";
+            document.getElementById('pFeatured').checked = p.featured || false;
+            document.getElementById('pVerified').checked = p.verified || false;
+
+            document.getElementById('formTitle').innerText = "Update Property";
+            document.getElementById('publishBtn').innerText = "Save Changes";
+            document.getElementById('cancelBtn').style.display = "block";
+            window.scrollTo(0,0);
+        }
+
+        function resetForm() {
+            document.getElementById('editId').value = "";
+            document.getElementById('pTitle').value = "";
+            document.getElementById('pState').value = PILOT_STATE;
+            lgaSelect.innerHTML = '<option value="Sapele">Sapele</option>';
+            lgaSelect.value = PILOT_LGA;
+            document.getElementById('pPrice').value = "";
+            document.getElementById('pDescription').value = "";
+            document.getElementById('pFeatured').checked = false;
+            document.getElementById('pVerified').checked = false;
+            document.getElementById('pImages').value = "";
+            document.getElementById('pVideos').value = "";
+            document.getElementById('formTitle').innerText = "Add New Property";
+            document.getElementById('publishBtn').innerText = "Publish Listing";
+            document.getElementById('cancelBtn').style.display = "none";
+        }
+
+        function toggleVerified(id) {
+            let db = JSON.parse(localStorage.getItem('property_db')) || [];
+            const idx = db.findIndex(p => p.id == id);
+            if (idx === -1) return;
+            db[idx].verified = !db[idx].verified;
+            localStorage.setItem('property_db', JSON.stringify(db));
+            loadListings();
+        }
+
+        function deleteItem(id) {
+            if(confirm("Delete this listing?")) {
+                let db = JSON.parse(localStorage.getItem('property_db')) || [];
+                db = db.filter(p => p.id !== id);
+                localStorage.setItem('property_db', JSON.stringify(db));
+                loadListings();
+            }
+        }
+    </script>
+</body>
+</html>

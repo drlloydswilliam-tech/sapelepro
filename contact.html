@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | PELEPRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold:        #C9A84C;
+            --gold-light:  #F0C96B;
+            --gold-dim:    rgba(201,168,76,0.15);
+            --teal:        #2DD4BF;
+            --teal-dim:    rgba(45,212,191,0.12);
+            --teal-border: rgba(45,212,191,0.28);
+            --navy:        #050E1E;
+            --navy-mid:    #0A1930;
+            --glass:       rgba(6,16,36,0.72);
+            --glass-light: rgba(255,255,255,0.06);
+            --glass-border:rgba(255,255,255,0.10);
+            --text:        #F0EDE8;
+            --text-muted:  rgba(240,237,232,0.52);
+            --radius:      18px;
+            --radius-sm:   10px;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--navy);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── BACKGROUND ── */
+        .bg-scene {
+            position: fixed; inset: 0; z-index: 0;
+            background:
+                radial-gradient(ellipse 70% 55% at 15% 20%, rgba(45,212,191,0.05) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 50% at 85% 75%, rgba(10,25,55,0.4) 0%, transparent 60%),
+                linear-gradient(160deg, #050E1E 0%, #081526 50%, #060F1C 100%);
+        }
+        .bg-img {
+            position: absolute; inset: 0;
+            background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            opacity: 0.05;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+            width: min(92%, 1160px); height: 66px;
+            background: rgba(5, 14, 30, 0.82);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 0 28px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+            transition: background 0.3s, top 0.3s;
+        }
+        nav.scrolled { background: rgba(5, 14, 30, 0.97); top: 10px; }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px; font-weight: 700;
+            color: var(--text); text-decoration: none; letter-spacing: 1px;
+        }
+        .logo span { color: var(--gold); }
+
+        .nav-right { display: flex; align-items: center; gap: 4px; }
+        .nav-links { display: flex; list-style: none; gap: 4px; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-muted);
+            font-size: 11.5px; font-weight: 500;
+            text-transform: uppercase; letter-spacing: 0.9px;
+            padding: 8px 15px; border-radius: 8px; transition: all 0.25s;
+        }
+        .nav-links a:hover { color: var(--navy); background: var(--gold-light); }
+        .nav-links a.active { color: var(--teal); }
+        
+        #adminPostBtn {
+            display: none;
+            background: var(--teal-dim);
+            border: 1px solid var(--teal-border);
+            color: var(--teal);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            text-decoration: none;
+            margin-left: 10px;
+            transition: all 0.25s;
+        }
+        #adminPostBtn:hover {
+            background: var(--teal);
+            color: var(--navy);
+            box-shadow: 0 8px 20px rgba(45, 212, 191, 0.3);
+        }
+
+        .hamburger {
+            display: none; flex-direction: column;
+            gap: 5px; cursor: pointer; padding: 4px;
+        }
+        .hamburger span {
+            display: block; width: 22px; height: 2px;
+            background: var(--text); border-radius: 2px; transition: all 0.3s;
+        }
+        .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* Mobile menu */
+        .mobile-menu {
+            position: fixed; inset: 0;
+            background: rgba(5, 14, 30, 0.97);
+            backdrop-filter: blur(30px);
+            z-index: 999;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 12px;
+            opacity: 0; pointer-events: none; transition: opacity 0.35s;
+        }
+        .mobile-menu.open { opacity: 1; pointer-events: all; }
+        .mobile-menu a {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px; font-weight: 600;
+            color: var(--text); text-decoration: none;
+            letter-spacing: 2px; padding: 10px 30px; transition: color 0.2s;
+        }
+        .mobile-menu a:hover, .mobile-menu a.active { color: var(--teal); }
+        .mobile-close {
+            position: absolute; top: 24px; right: 28px;
+            background: none; border: none; color: var(--text);
+            font-size: 28px; cursor: pointer; padding: 8px;
+        }
+
+        /* ── MAIN CONTENT WRAPPER ── */
+        .page-wrapper {
+            position: relative; z-index: 1;
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 140px 5% 80px;
+        }
+
+        .contact-card {
+            width: 100%; max-width: 900px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+            padding: 48px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .contact-eyebrow {
+            font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 3px;
+            color: var(--teal); margin-bottom: 14px;
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        .contact-eyebrow::after {
+            content: ''; display: block; width: 36px; height: 1px;
+            background: rgba(45, 212, 191, 0.3);
+        }
+
+        .contact-card h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4vw, 3rem); font-weight: 600;
+            letter-spacing: -0.5px; margin-bottom: 10px; line-height: 1.1;
+        }
+        .contact-card h1 em { font-style: italic; color: var(--teal); }
+        .contact-card p { font-size: 14px; color: var(--text-muted); max-width: 580px; margin-bottom: 36px; line-height: 1.6; }
+
+        /* ── FORM ── */
+        .contact-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+        .contact-field { display: flex; flex-direction: column; gap: 8px; }
+        .contact-field label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; }
+        
+        .contact-field input[type="text"], 
+        .contact-field input[type="email"], 
+        .contact-field select, 
+        .contact-field textarea {
+            width: 100%; padding: 14px 16px; border-radius: 11px;
+            background: var(--glass-light); border: 1px solid var(--glass-border);
+            color: var(--text); outline: none; font-size: 13.5px;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color 0.3s;
+        }
+        .contact-field input::placeholder, .contact-field textarea::placeholder { color: var(--text-muted); }
+        .contact-field input:focus, .contact-field select:focus, .contact-field textarea:focus { border-color: var(--teal-border); }
+        
+        .contact-field select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(240,237,232,0.4)' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 16px center;
+            padding-right: 40px; cursor: pointer;
+        }
+        .contact-field select option { background: var(--navy-mid); }
+
+        .contact-field textarea { min-height: 160px; resize: vertical; }
+        
+        /* Drag & Drop File Inputs */
+        .file-upload-wrap {
+            position: relative;
+            background: var(--glass-light);
+            border: 1px dashed var(--glass-border);
+            border-radius: 11px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-upload-wrap:hover { border-color: var(--teal-border); background: var(--teal-dim); }
+        .file-upload-wrap input[type="file"] {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer;
+        }
+        .file-label-text { font-size: 12px; color: var(--text-muted); pointer-events: none; }
+        .file-label-text strong { color: var(--teal); font-weight: 500; }
+
+        .contact-full { grid-column: 1 / -1; }
+        
+        .contact-status { margin-top: 18px; font-size: 13.5px; color: var(--teal); font-weight: 500; }
+
+        .btn-submit {
+            margin-top: 12px; padding: 14px 28px; border-radius: 11px; border: none; 
+            background: var(--teal-dim); border: 1px solid var(--teal-border);
+            color: var(--teal); font-family: 'DM Sans', sans-serif;
+            font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.25s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-submit:hover {
+            background: var(--teal); color: var(--navy);
+            box-shadow: 0 8px 20px rgba(45, 212, 191, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative; z-index: 1;
+            background: rgba(3, 8, 18, 0.9);
+            border-top: 1px solid var(--glass-border);
+            padding: 36px 5%; text-align: center;
+            font-size: 12px; color: var(--text-muted);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 700px) {
+            nav { top: 12px; height: 58px; padding: 0 18px; width: 92%; }
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .contact-grid { grid-template-columns: 1fr; gap: 18px; }
+            .contact-card { padding: 32px 20px; }
+            .page-wrapper { padding: 110px 5% 60px; }
+        }
+        @media (min-width: 701px) {
+            .mobile-menu { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-scene"><div class="bg-img"></div></div>
+
+<nav id="mainNav">
+    <a href="index.html" class="logo">PELE<span>PRO</span></a>
+    <div class="nav-right">
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="search.html?type=sale">For Sale</a></li>
+            <li><a href="rent.html">For Rent</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+        <a href="admin.html" id="adminPostBtn">Post Property</a>
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="menuClose">✕</button>
+    <a href="index.html">Home</a>
+    <a href="search.html?type=sale">For Sale</a>
+    <a href="rent.html">For Rent</a>
+    <a href="contact.html" class="active">Contact</a>
+</div>
+
+<div class="page-wrapper">
+    <div class="contact-card">
+        <div class="contact-eyebrow">Get In Touch</div>
+        <h1>Send Your <em>Enquiry</em></h1>
+        <p>Send your property request, upload multiple images/videos, and submit any enquiry for administrative review.</p>
+        
+        <form id="contactForm" onsubmit="submitContactForm(event)">
+            <div class="contact-grid">
+                <div class="contact-field">
+                    <label for="contactName">Your Name</label>
+                    <input type="text" id="contactName" placeholder="Enter your full name" required>
+                </div>
+                <div class="contact-field">
+                    <label for="contactEmail">Email Address</label>
+                    <input type="email" id="contactEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="contact-field contact-full">
+                    <label for="contactType">Request Type</label>
+                    <select id="contactType" required>
+                        <option value="">Select request type</option>
+                        <option value="post_property">Post a Property</option>
+                        <option value="general_inquiry">General Enquiry</option>
+                    </select>
+                </div>
+                <div class="contact-field contact-full">
+                    <label for="contactMessage">Message / Property Details</label>
+                    <textarea id="contactMessage" placeholder="Write your request or enquiry here" required></textarea>
+                </div>
+                <div class="contact-field">
+                    <label>Upload Images</label>
+                    <div class="file-upload-wrap">
+                        <input type="file" id="contactImages" accept="image/*" multiple onchange="updateFileLabel(this, 'imgLabel')">
+                        <div class="file-label-text" id="imgLabel">Drag images here or <strong>browse</strong></div>
+                    </div>
+                </div>
+                <div class="contact-field">
+                    <label>Upload Videos</label>
+                    <div class="file-upload-wrap">
+                        <input type="file" id="contactVideos" accept="video/*" multiple onchange="updateFileLabel(this, 'vidLabel')">
+                        <div class="file-label-text" id="vidLabel">Drag videos here or <strong>browse</strong></div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Submit Request</button>
+            <p id="contactStatus" class="contact-status"></p>
+        </form>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 PELEPRO — Engineered for Excellence.
+</footer>
+
+<script>
+    /* ── NAV SCROLL & MOBILE SCRIPT ── */
+    window.addEventListener('scroll', () => {
+        document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        mobileMenu.classList.toggle('open');
+        document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+    document.getElementById('menuClose').addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+    });
+
+    if (localStorage.getItem('isAdmin') === 'true') {
+        document.getElementById('adminPostBtn').style.display = 'inline-block';
+    }
+
+    /* ── FILE LABELS UPDATE ── */
+    function updateFileLabel(input, labelId) {
+        const label = document.getElementById(labelId);
+        const count = input.files.length;
+        if (count > 0) {
+            label.innerHTML = `Selected <strong>${count} file${count > 1 ? 's' : ''}</strong>`;
+        } else {
+            label.innerHTML = labelId === 'imgLabel' ? 'Drag images here or <strong>browse</strong>' : 'Drag videos here or <strong>browse</strong>';
+        }
+    }
+
+    /* ── FORM HANDLING ── */
+    function fileToDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve({ name: file.name, type: file.type, data: reader.result });
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function submitContactForm(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('contactName').value.trim();
+        const email = document.getElementById('contactEmail').value.trim();
+        const requestType = document.getElementById('contactType').value;
+        const message = document.getElementById('contactMessage').value.trim();
+        const statusEl = document.getElementById('contactStatus');
+        const imageFiles = Array.from(document.getElementById('contactImages').files);
+        const videoFiles = Array.from(document.getElementById('contactVideos').files);
+
+        if (!name || !email || !requestType || !message) {
+            statusEl.textContent = 'Please complete all required fields before sending.';
+            return;
+        }
+
+        statusEl.textContent = 'Uploading your request...';
+
+        try {
+            const imageData = await Promise.all(imageFiles.map(fileToDataUrl));
+            const videoData = await Promise.all(videoFiles.map(fileToDataUrl));
+
+            const requests = JSON.parse(localStorage.getItem('contact_requests')) || [];
+            requests.push({
+                id: Date.now(),
+                name,
+                email,
+                requestType,
+                message,
+                images: imageData,
+                videos: videoData,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            });
+            localStorage.setItem('contact_requests', JSON.stringify(requests));
+
+            document.getElementById('contactForm').reset();
+            document.getElementById('imgLabel').innerHTML = 'Drag images here or <strong>browse</strong>';
+            document.getElementById('vidLabel').innerHTML = 'Drag videos here or <strong>browse</strong>';
+            statusEl.textContent = 'Your request has been submitted successfully. Our admin will review it shortly.';
+        } catch (error) {
+            console.error(error);
+            statusEl.textContent = 'There was a problem uploading your files. Please try again.';
+        }
+    }
+</script>
+</body>
+</html>

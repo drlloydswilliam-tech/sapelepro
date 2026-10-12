@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties for Sale | PELEPRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --gold: #C9A84C;
+            --gold-light: #F0C96B;
+            --gold-dim: rgba(201,168,76,0.15);
+            --navy: #050E1E;
+            --navy-mid: #0A1930;
+            --glass: rgba(6,16,36,0.75);
+            --glass-light: rgba(255,255,255,0.03);
+            --glass-border: rgba(255,255,255,0.09);
+            --glass-border-gold: rgba(201,168,76,0.25);
+            --text: #F0EDE8;
+            --text-muted: rgba(240,237,232,0.55);
+            --radius: 24px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
+        
+        body { 
+            background: var(--navy);
+            color: var(--text);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ── BACKGROUND SCENE ── */
+        .bg-scene {
+            position: fixed; inset: 0; z-index: -1;
+            background:
+                radial-gradient(ellipse 60% 40% at 80% 10%, rgba(201,168,76,0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 20% 80%, rgba(30,60,110,0.15) 0%, transparent 60%),
+                linear-gradient(180deg, #050E1E 0%, #07152B 100%);
+        }
+
+        /* Particles */
+        .particle {
+            position: absolute; border-radius: 50%; background: var(--gold); opacity: 0;
+            pointer-events: none;
+            animation: floatUp var(--dur, 12s) linear var(--delay, 0s) infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.2; }
+            90% { opacity: 0.1; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 24px; left: 5%; width: 90%; height: 74px;
+            background: var(--glass);
+            backdrop-filter: blur(24px) saturate(120%);
+            -webkit-backdrop-filter: blur(24px) saturate(120%);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 0 40px;
+            display: flex; justify-content: space-between;
+            align-items: center; z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .logo { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px; font-weight: 700; color: #fff; text-decoration: none; 
+            letter-spacing: 1px;
+        }
+        .logo span { color: var(--gold); }
+        
+        .nav-links { display: flex; gap: 30px; list-style: none; align-items: center; }
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--text-muted); 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            font-weight: 600; 
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+        .nav-links a:hover { color: var(--gold); }
+
+        /* --- HEADER SECTION --- */
+        .page-header {
+            padding: 180px 5% 50px;
+            text-align: center;
+            position: relative;
+        }
+        .header-eyebrow {
+            font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 3px;
+            color: var(--gold); margin-bottom: 12px;
+            display: inline-block;
+        }
+        .page-header h1 { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 3.8rem); 
+            font-weight: 600;
+            letter-spacing: -0.5px; margin-bottom: 15px; 
+            line-height: 1.1;
+        }
+        .page-header p { 
+            color: var(--text-muted); 
+            font-size: 15px; 
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- GRID LAYOUT --- */
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding-bottom: 100px; }
+        
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 35px;
+        }
+
+        .property-card {
+            background: var(--glass-light);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .property-card::after {
+            content: ''; position: absolute; inset: 0;
+            border-radius: var(--radius); pointer-events: none;
+            border: 1px solid transparent; transition: 0.4s;
+        }
+
+        .property-card:hover { 
+            transform: translateY(-8px); 
+            background: rgba(255,255,255,0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .property-card:hover::after {
+            border-color: var(--glass-border-gold);
+        }
+
+        .img-container { width: 100%; height: 240px; position: relative; overflow: hidden; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .property-card:hover img { transform: scale(1.08); }
+
+        .badge {
+            position: absolute; top: 20px; left: 20px;
+            background: var(--gold); color: var(--navy);
+            padding: 6px 14px; border-radius: 6px; 
+            font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .details { padding: 25px; }
+        
+        .details h3 { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px; margin-bottom: 10px; font-weight: 600; 
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+        
+        .details .price { 
+            color: var(--gold-light); 
+            font-size: 20px; 
+            font-weight: 600; 
+            margin-bottom: 20px; 
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .btn-view {
+            display: block; width: 100%; padding: 14px; text-align: center;
+            background: rgba(255,255,255,0.06); color: var(--text);
+            text-decoration: none; border-radius: 12px; font-size: 12px;
+            font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+        .btn-view:hover { 
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); 
+            color: var(--navy);
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(201,168,76,0.25);
+        }
+
+        /* No Results Styling */
+        .no-results { 
+            text-align: center; padding: 100px 0; 
+            background: var(--glass-light);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+        }
+        .no-results h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px; color: var(--gold); margin-bottom: 10px;
+        }
+        .no-results p { color: var(--text-muted); font-size: 15px; }
+
+        @media (max-width: 768px) {
+            nav { left: 0; width: 100%; top: 0; border-radius: 0; border-inline: none; padding: 14px 20px; }
+            .nav-links { gap: 15px; }
+            .nav-links a { font-size: 10px; letter-spacing: 1px; }
+            .page-header { padding: 150px 4% 35px; }
+            .container { width: 92%; }
+            .property-grid { grid-template-columns: 1fr; gap: 24px; }
+            .img-container { height: 210px; }
+            .details { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-scene" id="bgScene"></div>
+
+    <nav>
+        <a href="index.html" class="logo">PELE<span>PRO</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sale.html" style="color: var(--gold);">For Sale</a></li>
+            <li><a href="rent.html">For Rent</a></li>
+        </ul>
+    </nav>
+
+    <header class="page-header">
+        <span class="header-eyebrow">Premier Collection</span>
+        <h1 id="headerTitle">Available for Sale</h1>
+        <p id="subTitle">Discover iconic estates and premium land ready for private acquisition.</p>
+    </header>
+
+    <div class="container">
+        <div class="property-grid" id="saleGrid"></div>
+        <div id="noResults" class="no-results" style="display: none;">
+            <h3>No Properties Found</h3>
+            <p>Our portfolios do not currently reflect listings in that exact location. Try adjusting your parameters.</p>
+        </div>
+    </div>
+
+    <script>
+        // Background ambient floating particles
+        function spawnParticles() {
+            const scene = document.getElementById('bgScene');
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = Math.random() * 3 + 1.5;
+                p.style.cssText = `
+                    width:${size}px; height:${size}px;
+                    left:${Math.random()*100}%;
+                    --dur:${Math.random()*12+12}s;
+                    --delay:${Math.random()*10}s;
+                `;
+                scene.appendChild(p);
+            }
+        }
+
+        function loadProperties() {
+            const grid = document.getElementById('saleGrid');
+            const noResults = document.getElementById('noResults');
+            const headerTitle = document.getElementById('headerTitle');
+            
+            const db = JSON.parse(localStorage.getItem('property_db')) || [];
+            const pilotDb = db.filter(item => {
+                const state = (item.state || '').toLowerCase();
+                const location = ((item.location || item.lga || '') + '').toLowerCase();
+                return item.type === 'sale' && state === 'delta' && location === 'sapele';
+            });
+            let saleListings = pilotDb;
+
+            // 3. Check for Search Filter from search.html
+            const searchLoc = localStorage.getItem('lastSearchLoc');
+            const searchState = localStorage.getItem('lastSearchState');
+            if (searchLoc) {
+                saleListings = saleListings.filter(p => {
+                    const locationValue = (p.location || p.lga || "").toLowerCase();
+                    const stateValue = (p.state || "").toLowerCase();
+                    const titleValue = (p.title || "").toLowerCase();
+
+                    return locationValue.includes(searchLoc) ||
+                        stateValue.includes(searchState || searchLoc) ||
+                        titleValue.includes(searchLoc);
+                });
+                headerTitle.innerText = `Portfolio: ${searchLoc.toUpperCase()}`;
+                localStorage.removeItem('lastSearchLoc');
+                localStorage.removeItem('lastSearchState');
+            }
+
+            // 4. Render the grid
+            if (saleListings.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+
+            grid.innerHTML = saleListings.map(p => `
+                <div class="property-card">
+                    <div class="img-container">
+                        <span class="badge">FOR SALE</span>
+                        <img src="${p.image || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&q=80'}" alt="${p.title}">
+                    </div>
+                    <div class="details">
+                        <h3>${p.title}</h3>
+                        <p class="price">${p.price}</p>
+                        <a href="property-details.html?id=${p.id}" class="btn-view">View Details</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            spawnParticles();
+            loadProperties();
+        });
+    </script>
+</body>
+</html>

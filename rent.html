@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Properties for Rent | PELEPRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:        #C9A84C;
+  --gold-light:  #F0C96B;
+  --gold-dim:    rgba(201,168,76,0.15);
+  --teal:        #2DD4BF;
+  --teal-dim:    rgba(45,212,191,0.12);
+  --teal-border: rgba(45,212,191,0.28);
+  --navy:        #050E1E;
+  --navy-mid:    #0A1930;
+  --glass:       rgba(6,16,36,0.72);
+  --glass-light: rgba(255,255,255,0.06);
+  --glass-border:rgba(255,255,255,0.10);
+  --text:        #F0EDE8;
+  --text-muted:  rgba(240,237,232,0.52);
+  --radius:      18px;
+  --radius-sm:   10px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'DM Sans',sans-serif;
+  background:var(--navy);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── BACKGROUND ── */
+.bg-scene {
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 20%, rgba(45,212,191,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 75%, rgba(10,25,55,0.4) 0%, transparent 60%),
+    linear-gradient(160deg,#050E1E 0%,#081526 50%,#060F1C 100%);
+}
+.bg-img {
+  position:absolute; inset:0;
+  background:url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+  opacity:0.07;
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:18px; left:50%; transform:translateX(-50%);
+  width:min(92%,1160px); height:66px;
+  background:rgba(5,14,30,0.82);
+  backdrop-filter:blur(24px) saturate(150%);
+  -webkit-backdrop-filter:blur(24px) saturate(150%);
+  border:1px solid var(--glass-border);
+  border-radius:20px; padding:0 28px;
+  display:flex; justify-content:space-between; align-items:center;
+  z-index:1000;
+  box-shadow:0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition:background 0.3s, top 0.3s;
+}
+nav.scrolled { background:rgba(5,14,30,0.97); top:10px; }
+
+.logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:700;
+  color:var(--text); text-decoration:none; letter-spacing:1px;
+}
+.logo span { color:var(--gold); }
+
+.nav-links { display:flex; list-style:none; gap:4px; }
+.nav-links a {
+  text-decoration:none; color:var(--text-muted);
+  font-size:11.5px; font-weight:500;
+  text-transform:uppercase; letter-spacing:0.9px;
+  padding:8px 15px; border-radius:8px; transition:all 0.25s;
+}
+.nav-links a:hover { color:var(--navy); background:var(--gold-light); }
+.nav-links a.active { color:var(--teal); }
+
+.hamburger {
+  display:none; flex-direction:column;
+  gap:5px; cursor:pointer; padding:4px;
+}
+.hamburger span {
+  display:block; width:22px; height:2px;
+  background:var(--text); border-radius:2px; transition:all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(5px,5px); }
+.hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(5px,-5px); }
+
+/* Mobile menu */
+.mobile-menu {
+  position:fixed; inset:0;
+  background:rgba(5,14,30,0.97);
+  backdrop-filter:blur(30px);
+  z-index:999;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:12px;
+  opacity:0; pointer-events:none; transition:opacity 0.35s;
+}
+.mobile-menu.open { opacity:1; pointer-events:all; }
+.mobile-menu a {
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px; font-weight:600;
+  color:var(--text); text-decoration:none;
+  letter-spacing:2px; padding:10px 30px; transition:color 0.2s;
+}
+.mobile-menu a:hover, .mobile-menu a.active { color:var(--teal); }
+.mobile-close {
+  position:absolute; top:24px; right:28px;
+  background:none; border:none; color:var(--text);
+  font-size:28px; cursor:pointer; padding:8px;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  position:relative; z-index:1;
+  padding:130px 5% 50px;
+  text-align:center;
+  background:linear-gradient(to bottom, rgba(45,212,191,0.06), transparent);
+  border-bottom:1px solid var(--glass-border);
+}
+.page-eyebrow {
+  font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:3px;
+  color:var(--teal); margin-bottom:14px;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.page-eyebrow::before, .page-eyebrow::after {
+  content:''; display:block; width:36px; height:1px;
+  background:rgba(45,212,191,0.3);
+}
+.page-header h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,5vw,3.4rem); font-weight:600;
+  letter-spacing:-0.5px; margin-bottom:10px; line-height:1.1;
+}
+.page-header h1 em { font-style:italic; color:var(--teal); }
+.page-header p { font-size:14.5px; color:var(--text-muted); max-width:480px; margin:0 auto; }
+
+/* Result count */
+.result-count {
+  display:inline-flex; align-items:center; gap:8px;
+  margin-top:18px;
+  font-size:13px; color:var(--text-muted);
+}
+.result-count strong { color:var(--teal); font-weight:600; }
+
+/* ── FILTER BAR ── */
+.filter-wrap {
+  position:relative; z-index:1;
+  padding:28px 5%;
+  background:rgba(5,14,30,0.6);
+  border-bottom:1px solid var(--glass-border);
+  backdrop-filter:blur(20px);
+}
+.filter-bar {
+  max-width:1160px; margin:0 auto;
+  display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;
+}
+
+.filter-select {
+  background:var(--glass-light);
+  border:1px solid var(--glass-border);
+  border-radius:11px; padding:12px 14px;
+  color:var(--text); font-family:'DM Sans',sans-serif;
+  font-size:13px; outline:none; cursor:pointer;
+  transition:border-color 0.3s; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(240,237,232,0.4)' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center;
+  padding-right:32px;
+  min-width: 160px;
+}
+.filter-select:focus { border-color:var(--teal-border); }
+.filter-select option { background:var(--navy-mid); }
+
+.btn-reset {
+  background:none; border:1px solid var(--glass-border);
+  color:var(--text-muted); border-radius:11px;
+  padding:12px 18px; font-family:'DM Sans',sans-serif;
+  font-size:13px; cursor:pointer; transition:all 0.25s;
+  white-space:nowrap;
+}
+.btn-reset:hover { border-color:rgba(255,255,255,0.3); color:var(--text); }
+
+/* ── MAIN CONTENT ── */
+.main-content {
+  position:relative; z-index:1;
+  padding:40px 5% 80px;
+}
+.content-inner { max-width:1200px; margin:0 auto; }
+
+/* Sort row */
+.sort-row {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:28px; flex-wrap:wrap; gap:12px;
+}
+.sort-label { font-size:13px; color:var(--text-muted); }
+.sort-row select {
+  background:var(--glass-light);
+  border:1px solid var(--glass-border);
+  border-radius:9px; padding:8px 32px 8px 12px;
+  color:var(--text); font-family:'DM Sans',sans-serif;
+  font-size:13px; outline:none; cursor:pointer; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(240,237,232,0.4)' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 10px center;
+}
+.sort-row select option { background:var(--navy-mid); }
+
+/* ── PROPERTY GRID ── */
+.property-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));
+  gap:24px;
+}
+
+.prop-card {
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:20px; overflow:hidden;
+  cursor:pointer;
+  transition:all 0.35s;
+  opacity:0; transform:translateY(24px);
+  backdrop-filter:blur(16px);
+  display:flex; flex-direction:column;
+}
+.prop-card.visible { opacity:1; transform:translateY(0); }
+.prop-card:hover {
+  transform:translateY(-6px) !important;
+  border-color:var(--teal-border);
+  box-shadow:0 24px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(45,212,191,0.12);
+}
+
+/* Image */
+.card-img-wrap {
+  position:relative; height:210px; overflow:hidden;
+}
+.card-img-wrap img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.prop-card:hover .card-img-wrap img { transform:scale(1.07); }
+
+.card-badge {
+  position:absolute; top:14px; left:14px;
+  background:rgba(5,14,30,0.82);
+  border:1px solid var(--teal-border);
+  backdrop-filter:blur(12px);
+  padding:5px 12px; border-radius:7px;
+  font-size:9.5px; font-weight:700;
+  text-transform:uppercase; letter-spacing:1.2px;
+  color:var(--teal);
+}
+
+.card-featured {
+  position:absolute; top:14px; right:14px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  padding:5px 10px; border-radius:7px;
+  font-size:9px; font-weight:700;
+  text-transform:uppercase; letter-spacing:1px;
+  color:var(--navy);
+}
+
+/* Quick specs overlay */
+.card-specs-overlay {
+  position:absolute; bottom:0; left:0; right:0;
+  background:linear-gradient(to top, rgba(5,14,30,0.9) 0%, transparent 100%);
+  padding:20px 16px 12px;
+  display:flex; gap:14px;
+  opacity:0; transition:opacity 0.3s;
+}
+.prop-card:hover .card-specs-overlay { opacity:1; }
+.spec-chip {
+  display:flex; align-items:center; gap:5px;
+  font-size:12px; color:rgba(240,237,232,0.9);
+}
+
+/* Card body */
+.card-body {
+  padding:20px 22px; flex:1;
+  display:flex; flex-direction:column; gap:10px;
+}
+
+.card-location {
+  display:flex; align-items:center; gap:5px;
+  font-size:12px; color:var(--text-muted);
+}
+.card-location svg { flex-shrink:0; }
+
+.card-title {
+  font-size:16.5px; font-weight:500;
+  color:var(--text); line-height:1.35;
+}
+
+.card-price {
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px; font-weight:700;
+  color:var(--teal);
+}
+
+.card-divider {
+  height:1px; background:rgba(255,255,255,0.07); margin:4px 0;
+}
+
+.card-footer {
+  display:flex; align-items:center; justify-content:space-between;
+}
+.card-specs {
+  display:flex; gap:16px;
+  font-size:12.5px; color:var(--text-muted);
+}
+.card-specs span { display:flex; align-items:center; gap:4px; }
+
+.btn-view {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:9px 18px;
+  background:var(--teal-dim);
+  border:1px solid var(--teal-border);
+  border-radius:9px; color:var(--teal);
+  font-family:'DM Sans',sans-serif;
+  font-size:12.5px; font-weight:600;
+  text-decoration:none;
+  transition:all 0.25s; white-space:nowrap;
+}
+.btn-view:hover {
+  background:var(--teal); color:var(--navy);
+  box-shadow:0 8px 20px rgba(45,212,191,0.3);
+  transform:translateY(-1px);
+}
+.btn-view svg { transition:transform 0.25s; }
+.btn-view:hover svg { transform:translateX(3px); }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  display:none; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:80px 24px;
+  gap:16px;
+}
+.empty-state.show { display:flex; }
+.empty-icon {
+  width:80px; height:80px; border-radius:50%;
+  background:var(--teal-dim); border:1px solid var(--teal-border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:32px; margin-bottom:8px;
+}
+.empty-state h3 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px; font-weight:600; color:var(--text);
+}
+.empty-state p { font-size:14px; color:var(--text-muted); max-width:360px; line-height:1.7; }
+.btn-clear {
+  margin-top:8px; padding:12px 28px;
+  background:var(--teal-dim); border:1px solid var(--teal-border);
+  border-radius:11px; color:var(--teal);
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600;
+  cursor:pointer; transition:all 0.25s;
+}
+.btn-clear:hover { background:var(--teal); color:var(--navy); }
+
+/* ── FOOTER ── */
+footer {
+  position:relative; z-index:1;
+  background:rgba(3,8,18,0.9);
+  border-top:1px solid var(--glass-border);
+  padding:36px 5%; text-align:center;
+}
+.footer-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:700;
+  letter-spacing:1px; margin-bottom:8px;
+}
+.footer-logo span { color:var(--gold); }
+footer p { font-size:12px; color:var(--text-muted); }
+
+/* ── SVG ICON HELPER ── */
+.icon { width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+
+/* ── SKELETON LOADER ── */
+.skeleton {
+  background:var(--glass-light);
+  border:1px solid var(--glass-border);
+  border-radius:20px; overflow:hidden;
+  height:380px;
+}
+.skel-img { height:210px; background:rgba(255,255,255,0.04); }
+.skel-body { padding:20px 22px; display:flex; flex-direction:column; gap:12px; }
+.skel-line {
+  height:12px; border-radius:6px;
+  background:linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
+  background-size:200% 100%;
+  animation:shimmer 1.5s infinite;
+}
+@keyframes shimmer { to { background-position:-200% 0; } }
+.skel-line.w60 { width:60%; }
+.skel-line.w40 { width:40%; }
+.skel-line.w80 { width:80%; }
+.skel-line.tall { height:22px; width:50%; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:700px) {
+  nav { top:12px; height:58px; padding:0 18px; }
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .property-grid { grid-template-columns:1fr; }
+  .filter-bar { flex-direction:column; align-items:stretch; }
+  .sort-row { flex-direction:column; align-items:flex-start; }
+  .page-header { padding:110px 5% 40px; }
+}
+@media (min-width:701px) {
+  .mobile-menu { display:none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-scene"><div class="bg-img"></div></div>
+
+<nav id="mainNav">
+  <a href="index.html" class="logo">PELE<span>PRO</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="search.html?type=sale">For Sale</a></li>
+    <li><a href="rent.html" class="active">For Rent</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="menuClose">✕</button>
+  <a href="index.html">Home</a>
+  <a href="search.html?type=sale">For Sale</a>
+  <a href="rent.html" class="active">For Rent</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<header class="page-header">
+  <div class="page-eyebrow">Properties for Rent</div>
+  <h1 id="headerTitle">Find Your <em>Perfect</em> Rental</h1>
+  <p id="subTitle">Browse premium short-let and long-term rental properties across Nigeria.</p>
+  <div class="result-count" id="resultCount" style="display:none">
+    Showing <strong id="resultNum">0</strong> rentals
+  </div>
+</header>
+
+<div class="filter-wrap">
+  <div class="filter-bar">
+    <select class="filter-select" id="filterBeds">
+      <option value="">Any Beds</option>
+      <option value="1">1 Bed</option>
+      <option value="2">2 Beds</option>
+      <option value="3">3 Beds</option>
+      <option value="4">4+ Beds</option>
+    </select>
+    <select class="filter-select" id="filterState">
+      <option value="">All States</option>
+    </select>
+    <button class="btn-reset" id="btnReset">Clear All</button>
+  </div>
+</div>
+
+<main class="main-content">
+  <div class="content-inner">
+
+    <div class="sort-row">
+      <div class="sort-label" id="sortLabel">All rental properties</div>
+      <select id="sortBy">
+        <option value="default">Default Order</option>
+        <option value="price-asc">Price: Low → High</option>
+        <option value="price-desc">Price: High → Low</option>
+        <option value="beds-desc">Most Bedrooms</option>
+      </select>
+    </div>
+
+    <div class="property-grid" id="rentGrid"></div>
+
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">🔍</div>
+      <h3>No Rentals Found</h3>
+      <p>We couldn't find rentals matching your search. Try adjusting your filters or clearing them.</p>
+      <button class="btn-clear" id="btnClearEmpty">Clear Filters</button>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-logo">PELE<span>PRO</span></div>
+  <p>&copy; 2026 PELEPRO — Engineered for Excellence.</p>
+</footer>
+
+<script>
+/* ── STATE ── */
+let allRentals = [];
+let filtered   = [];
+let activeQuery = ''; // Kept to safely handle URL/incoming queries in the background
+
+/* ── NAV ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+}, { passive:true });
+
+const hamburger = document.getElementById('hamburger');
+const mobileMenu= document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+  document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+});
+document.getElementById('menuClose').addEventListener('click', () => {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+  document.body.style.overflow = '';
+});
+
+/* ── SEED DATA ── */
+function seedDB() {
+  if (localStorage.getItem('property_db')) return;
+  const props = [
+    { id:1, title:'Sapele Executive Villa', state:'Delta', lga:'Sapele', location:'Sapele', price:'₦450,000,000', priceNum:450000000, type:'sale', featured:true, bedrooms:4, bathrooms:3, image:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80' },
+    { id:2, title:'Sapele City Apartment', state:'Delta', lga:'Sapele', location:'Sapele', price:'₦85,000/mo', priceNum:85000, type:'rent', featured:true, bedrooms:2, bathrooms:2, image:'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80' },
+    { id:3, title:'Sapele Family Home', state:'Delta', lga:'Sapele', location:'Sapele', price:'₦120,000,000', priceNum:120000000, type:'sale', featured:true, bedrooms:5, bathrooms:4, image:'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=600&q=80' },
+    { id:4, title:'Sapele Studio Residence', state:'Delta', lga:'Sapele', location:'Sapele', price:'₦35,000/mo', priceNum:35000, type:'rent', featured:true, bedrooms:1, bathrooms:1, image:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80' },
+  ];
+  localStorage.setItem('property_db', JSON.stringify(props));
+}
+
+/* ── BUILD STATE SELECT ── */
+function buildStateSelect(rentals) {
+  const states = [...new Set(rentals.map(p => p.state))].sort();
+  const sel = document.getElementById('filterState');
+  states.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    sel.appendChild(opt);
+  });
+}
+
+/* ── SHOW SKELETONS ── */
+function showSkeletons(n = 6) {
+  const grid = document.getElementById('rentGrid');
+  grid.innerHTML = Array(n).fill(`
+    <div class="skeleton">
+      <div class="skel-img"></div>
+      <div class="skel-body">
+        <div class="skel-line w40"></div>
+        <div class="skel-line w80"></div>
+        <div class="skel-line tall"></div>
+        <div class="skel-line w60"></div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── RENDER ── */
+function renderGrid(items) {
+  const grid      = document.getElementById('rentGrid');
+  const empty     = document.getElementById('emptyState');
+  const countWrap = document.getElementById('resultCount');
+  const countNum  = document.getElementById('resultNum');
+
+  countWrap.style.display = 'flex';
+  countNum.textContent = items.length;
+
+  if (!items.length) {
+    grid.innerHTML = '';
+    empty.classList.add('show');
+    return;
+  }
+  empty.classList.remove('show');
+
+  grid.innerHTML = items.map((p, i) => `
+    <div class="prop-card" style="transition-delay:${Math.min(i,8) * 70}ms">
+      <div class="card-img-wrap">
+        <img src="${p.image}" alt="${p.title}" loading="lazy">
+        <div class="card-badge">For Rent</div>
+        ${p.featured ? '<div class="card-featured">★ Featured</div>' : ''}
+        <div class="card-specs-overlay">
+          ${p.bedrooms ? `<div class="spec-chip">🛏 ${p.bedrooms} Beds</div>` : ''}
+          ${p.bathrooms ? `<div class="spec-chip">🚿 ${p.bathrooms} Baths</div>` : ''}
+          <div class="spec-chip">📍 ${p.lga}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          ${p.lga}, ${p.state}
+        </div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-price">${p.price}</div>
+        <div class="card-divider"></div>
+        <div class="card-footer">
+          <div class="card-specs">
+            ${p.bedrooms ? `<span>🛏 ${p.bedrooms}</span>` : ''}
+            ${p.bathrooms ? `<span>🚿 ${p.bathrooms}</span>` : ''}
+          </div>
+          <a href="property-details.html?id=${p.id}" class="btn-view">
+            View
+            <svg class="icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>`).join('');
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold:0.1 });
+  grid.querySelectorAll('.prop-card').forEach(c => io.observe(c));
+}
+
+/* ── FILTER + SORT ── */
+function applyFilters() {
+  const beds  = document.getElementById('filterBeds').value;
+  const state = document.getElementById('filterState').value;
+  const sort  = document.getElementById('sortBy').value;
+
+  let result = allRentals.filter(p => {
+    const matchQ = !activeQuery ||
+      (p.title||'').toLowerCase().includes(activeQuery) ||
+      (p.lga||'').toLowerCase().includes(activeQuery) ||
+      (p.state||'').toLowerCase().includes(activeQuery);
+    const matchBeds  = !beds || (beds === '4' ? p.bedrooms >= 4 : p.bedrooms == beds);
+    const matchState = !state || p.state === state;
+    return matchQ && matchBeds && matchState;
+  });
+
+  if (sort === 'price-asc')  result.sort((a,b) => (a.priceNum||0) - (b.priceNum||0));
+  if (sort === 'price-desc') result.sort((a,b) => (b.priceNum||0) - (a.priceNum||0));
+  if (sort === 'beds-desc')  result.sort((a,b) => b.bedrooms - a.bedrooms);
+
+  // update sort label
+  const parts = [];
+  if (activeQuery) parts.push(`"${activeQuery}"`);
+  if (state) parts.push(state);
+  if (beds) parts.push(beds === '4' ? '4+ beds' : `${beds} bed${beds>1?'s':''}`);
+  document.getElementById('sortLabel').textContent = parts.length
+    ? `Showing results for ${parts.join(', ')}`
+    : 'All rental properties';
+
+  renderGrid(result);
+}
+
+/* ── RESET ── */
+function resetAll() {
+  activeQuery = '';
+  document.getElementById('filterBeds').value = '';
+  document.getElementById('filterState').value = '';
+  document.getElementById('sortBy').value = 'default';
+  document.getElementById('headerTitle').innerHTML = 'Find Your <em>Perfect</em> Rental';
+  document.getElementById('subTitle').textContent = 'Browse premium short-let and long-term rental properties across Nigeria.';
+  applyFilters();
+}
+
+document.getElementById('btnReset').addEventListener('click', resetAll);
+document.getElementById('btnClearEmpty').addEventListener('click', resetAll);
+document.getElementById('filterBeds').addEventListener('change', applyFilters);
+document.getElementById('filterState').addEventListener('change', applyFilters);
+document.getElementById('sortBy').addEventListener('change', applyFilters);
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded', () => {
+  seedDB();
+  const db = JSON.parse(localStorage.getItem('property_db') || '[]');
+  allRentals = db.filter(p => {
+    const state = (p.state || '').toLowerCase();
+    const location = ((p.location || p.lga || '') + '').toLowerCase();
+    return p.type === 'rent' && state === 'delta' && location === 'sapele';
+  });
+  buildStateSelect(allRentals);
+
+  // Handle URL params (from homepage search or direct link)
+  const params  = new URLSearchParams(window.location.search);
+  const qParam  = params.get('q') || '';
+  // Also handle legacy localStorage search
+  const legacyQ = localStorage.getItem('lastSearchLoc') || '';
+  if (legacyQ) { localStorage.removeItem('lastSearchLoc'); localStorage.removeItem('lastSearchState'); }
+  activeQuery = (qParam || legacyQ).toLowerCase().trim();
+
+  showSkeletons();
+  setTimeout(() => {
+    if (activeQuery) {
+      document.getElementById('headerTitle').innerHTML = `Rentals near <em>${activeQuery}</em>`;
+      document.getElementById('subTitle').textContent = '';
+    }
+    applyFilters();
+  }, 420); // Brief skeleton delay for polish
+});
+</script>
+</body>
+</html>
